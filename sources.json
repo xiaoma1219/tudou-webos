@@ -1,0 +1,16 @@
+[	
+	{
+		"source": "javascript/API.js"
+	},
+	{
+		"source": "javascript/layout.js"
+	},
+	{
+		"scenes": "main" ,
+		"source": "app/assistants/main-assistant.js"
+	},
+	{
+		"scenes": "player" ,
+		"source": "app/assistants/player-assistant.js"
+	}
+]
