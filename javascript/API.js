@@ -26,7 +26,7 @@ function paramURL(_data) {
 			}
 			if(_callbacks && _callbacks.success){
 				_callbacks.success(xmlhttp.responseText);
-			}				
+			}		
 		}
 		else if (xmlhttp.readyState == 4 && xmlhttp.status !=200){
 			if(API.request_stop){
@@ -34,7 +34,8 @@ function paramURL(_data) {
 			}
 			if(_callbacks && _callbacks.fail){
 				_callbacks.fail();
-			}				
+			}
+			Mojo.Controller.errorDialog("网络连接失败。"); 
 		}
 		else if(xmlhttp.readyState == 1){
 			if(API.request_start){
