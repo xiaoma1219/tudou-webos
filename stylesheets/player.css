@@ -8,6 +8,7 @@
 	font-weight:bold;
 	color:white;
 	white-space:nowrap;
+	z-index:10001;
 }
 #title
 {
@@ -39,7 +40,7 @@
 #video-object
 {
 	position:absolute;
-	background-color:none;
+	background:#999999;
 }
 
 #video-control
@@ -64,6 +65,7 @@
 	top:25px;
 	float:left;
 	height:30px;
+	z-index:10001;
 }
 
 #slider_bar_container
@@ -176,4 +178,16 @@
 	font-size:12px;
 	overflow:hidden;
 	color:white;
+}
+
+#loading_tip
+{
+	position:relative;
+	width:100%;
+	height:30px;
+	line-height:30px;
+	font-size:14px;
+	color:white;
+	display:none;
+	font-weight:blod;
 }

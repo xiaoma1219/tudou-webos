@@ -19,22 +19,26 @@ function paramURL(_data) {
 	var xmlhttp = new XMLHttpRequest();
 	if(!xmlhttp)
 		return false;
-	window.onrequest = true;
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState==4 && xmlhttp.status==200){
+			if(API.request_stop){
+				API.request_stop();
+			}
 			if(_callbacks && _callbacks.success){
 				_callbacks.success(xmlhttp.responseText);
 			}				
 		}
 		else if (xmlhttp.readyState == 4 && xmlhttp.status !=200){
-			window.onrequest = false;
+			if(API.request_stop){
+				API.request_stop();
+			}
 			if(_callbacks && _callbacks.fail){
 				_callbacks.fail();
 			}				
 		}
-		else if(xmlhttp.readyState < 4){
-			if(_callbacks && _callbacks.load){
-				_callbacks.load();
+		else if(xmlhttp.readyState == 1){
+			if(API.request_start){
+				API.request_start();
 			}
 		}
 	};
@@ -82,8 +86,8 @@ window.API =
 			projid:1031,
 			op:0,
 			child:9999,
-			sw:400,
-			sh:320	
+			sw:screen.width,
+			sh:screen.height	
 		});
 		request(url, _param);
 	},

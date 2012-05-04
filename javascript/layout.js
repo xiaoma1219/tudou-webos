@@ -45,7 +45,7 @@ var VideoListView = Class.create({
 		else
 			this.list = id;
 		this.size = 0;
-		this.item_height = 167;
+		this.item_height = 160;
 		if(screen.width == 480)
 			this.row_count = 3;
 		else
@@ -274,6 +274,8 @@ var SliderBar = Class.create({
 		this.pos = this.handle_pos_x + event.clientX - this.handle_x_start;
 		if(this.pos > this.size)
 			this.pos = this.size;
+		else if(this.pos < 0)
+			this.pos = 0;
 		this.inner.style.width = this.pos + "px";
 		this.handle.style.left = this.pos + "px";
 		if(this.drag){

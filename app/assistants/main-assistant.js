@@ -10,10 +10,19 @@ MainAssistant.prototype.setup = function() {
 	else{
 		var container_height = screen.height - 60 + "px";
 	}
+	
+	this.controller.stageController.setWindowOrientation("up");
+	
+	
 	this.controller.get("NEV").className = "NEV_" + screen.width;
 	this.controller.get("BODY_CONTAINER").style.height = container_height;
 	this.controller.get("list_contianer").style.height = container_height;
 	this.controller.get("channel_list_container").style.height = container_height;
+	
+	this.spinner = this.controller.setupWidget("main_spinner",
+		{spinnerSize: Mojo.Widget.spinnerLarge}, {spinning: true}); 
+	this.spinner = this.controller.get("main_spinner");
+	this.spinner.style.top = screen.height/2 - 64 + "px";
 	
 	this.controller.setupWidget("search_value",
 			  attributes = {
@@ -26,7 +35,9 @@ MainAssistant.prototype.setup = function() {
 			      value: "",
 			      disabled: false
 			  }
-			); 	
+			); 
+			
+	
 	this.controller.setupWidget("channel_list_scroller",{},{ mode: "vertical"});
 	this.controller.setupWidget("video_list_scroll",{},{ mode: "vertical"}); 
 	this.video_list = new VideoListView("video_list");
@@ -37,7 +48,8 @@ MainAssistant.prototype.setup = function() {
 	this.channel_list_control_btn = this.controller.get("channel_list_control_btn");
 	this.video_list_scroll = this.controller.get("video_list_scroll");
 	this.channel_list_container = this.controller.get("channel_list_container");
-		
+	
+	
 		
 	this.insert_video_list = this.insert_video_list.bind(this);
 	this.nev_btn_tap = this.nev_btn_tap.curry(this);
@@ -45,9 +57,13 @@ MainAssistant.prototype.setup = function() {
 	this.search_tap = this.search_tap.bind(this);
 	this.video_list_scroll_update = this.video_list_scroll_update.bind(this);
 	
-
 	this.mouseup_channel_list = this.mouseup_channel_list.bind(this);
 	this.mousedown_channel_list = this.mousedown_channel_list.bind(this);
+	
+	this.spinner_start = this.spinner_start.bind(this);
+	this.spinner_stop = this.spinner_stop.bind(this);
+	
+	this.hide_channel_list = this.toggle_channel_list.curry("hide").bind(this);
 	
 	Mojo.Event.listen(this.search_btn, Mojo.Event.tap ,this.search_tap);
 	Mojo.Event.listen(this.channel_list_control_btn, Mojo.Event.tap, this.channel_list_control_btn_tap);
@@ -55,6 +71,11 @@ MainAssistant.prototype.setup = function() {
 	
 	Mojo.Event.listen(this.channel_list_container, "mousedown", this.mousedown_channel_list, true);
 	Mojo.Event.listen(this.channel_list_container, "mouseup", this.mouseup_channel_list, true);
+	Mojo.Event.listen(this.channel_list_container, "click", this.hide_channel_list, true);
+	
+	API.request_start = this.spinner_start;
+	API.request_stop = this.spinner_stop;
+	
 	this.init_nev();
 	
 	API.signin_api({
@@ -68,6 +89,7 @@ MainAssistant.prototype.data_init = function(data){
 		//Mojo.AlertDialog();
 		return false;
 	}
+	
 	if(typeof(data) === "string"){
 		data = Mojo.parseJSON(data);
 	}
@@ -79,7 +101,16 @@ MainAssistant.prototype.data_init = function(data){
 	this._ready = true;
 }
 
+MainAssistant.prototype.spinner_start = function(){
+	this.spinner.parentNode.style.display = "block";
+	if(this.spinner.mojo)
+		this.spinner.mojo.start();
+}
 
+MainAssistant.prototype.spinner_stop = function(){
+	this.spinner.parentNode.style.display = "none";
+	this.spinner.mojo.stop();
+}
 
 MainAssistant.prototype.init_channel_list = function(data){
 	if(!data){
@@ -271,7 +302,6 @@ MainAssistant.prototype.update_video_list = function(){
 		return false;
 	if(!this._ready)
 		return false;
-	Mojo.Log.info("updateing list : " + this.last_nev_tap.getAttribute("name"));
 	switch(this.last_nev_tap.getAttribute("name")){
 		case "rec" : 
 			API.rec_api({
@@ -305,11 +335,15 @@ MainAssistant.prototype.releaseEvent = function(){
 	
 	Mojo.Event.stopListening(this.channel_list_container, "mousedown", this.mousedown_channel_list, true);
 	Mojo.Event.stopListening(this.channel_list_container, "mouseup", this.mouseup_channel_list, true);
+	
+	Mojo.Event.listen(this.channel_list_container, "click", this.hide_channel_list, true);
 }
 
 
 MainAssistant.prototype.activate = function(event) {
 	this.controller.stageController.setWindowOrientation("up");
+	API.request_start = this.spinner_start;
+	API.request_stop = this.spinner_stop;
 
 }	
 	
