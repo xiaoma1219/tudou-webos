@@ -71,7 +71,6 @@ MainAssistant.prototype.setup = function() {
 	
 	Mojo.Event.listen(this.channel_list_container, "mousedown", this.mousedown_channel_list, true);
 	Mojo.Event.listen(this.channel_list_container, "mouseup", this.mouseup_channel_list, true);
-	Mojo.Event.listen(this.channel_list_container, "click", this.hide_channel_list, true);
 	
 	API.request_start = this.spinner_start;
 	API.request_stop = this.spinner_stop;
@@ -117,6 +116,7 @@ MainAssistant.prototype.init_channel_list = function(data){
 		return false;
 	}
 	this.channel_list = new ChannelListView("channel_list", "video_list");
+	this.channel_list.hide = this.hide_channel_list;
 	this.channel_list.insert(data);
 }
 
@@ -335,8 +335,6 @@ MainAssistant.prototype.releaseEvent = function(){
 	
 	Mojo.Event.stopListening(this.channel_list_container, "mousedown", this.mousedown_channel_list, true);
 	Mojo.Event.stopListening(this.channel_list_container, "mouseup", this.mouseup_channel_list, true);
-	
-	Mojo.Event.listen(this.channel_list_container, "click", this.hide_channel_list, true);
 }
 
 

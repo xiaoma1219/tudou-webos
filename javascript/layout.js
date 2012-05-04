@@ -178,6 +178,8 @@ var ChannelListView = Class.create({
 		if(!_parent)
 			return false;
 		var item = this;
+		if(_parent.hide)
+			_parent.hide();
 		if(_parent.last_tap){
 			if(item.getAttribute("columnid") == _parent.last_tap.getAttribute("columnid"))
 				return true;
