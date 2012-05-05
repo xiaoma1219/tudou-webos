@@ -221,7 +221,7 @@ var ChannelListView = Class.create({
 		var list_items = this.list.childNodes;
 		for(var i in list_items){
 			if(list_items.item(i).nodeType == 1)
-			Mojo.Event.listen(list_items.item(i),Mojo.Event.tap, this.tap);
+			Mojo.Event.stopListening(list_items.item(i),Mojo.Event.tap, this.tap);
 		}
 	}
 });
